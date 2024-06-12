@@ -14,6 +14,7 @@ def checkCredentials(username, password):
         mycursor = mydb.cursor()
         mycursor.execute("SELECT * FROM user")
         users = mycursor.fetchall()
+        mydb.close()
         for user in users:
             if username == user[1]:
                 hashed = user[2].encode()
@@ -22,6 +23,7 @@ def checkCredentials(username, password):
                     return(True, user)
                 else:
                     return(False, True)
-        mydb.close()
+        else:
+            return(False, True)
     except:
         return(False, False)

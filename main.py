@@ -9,6 +9,7 @@ from PyQt6.QtGui import *
 from PyQt6.QtWidgets import *
 
 from _login import *
+from _message import *
 
 CUR_DIR = os.path.dirname(__file__)
 DATA_DIR = os.path.join(CUR_DIR, "assets")
@@ -34,7 +35,7 @@ class LoginWindow(QMainWindow):
             )
             mydb.close()
         except:
-            self.errorMessageDisplay("La connexion à la base de données a échoué. Veuillez vérifier votre connexion et réessayer.")
+            errorMessageDisplay("La connexion à la base de données a échoué. Veuillez vérifier votre connexion et réessayer.")
 
         ### LAYOUT ###
         central_widget = QWidget()
@@ -104,42 +105,36 @@ class LoginWindow(QMainWindow):
     def login(self):
         ### HANDLING USER EMPTY INPUTS ###
         if self.input_widget.text() == "":
-            self.infoMessageDisplay("Le nom d'utilisateur est obligatoire pour se connecter.")
+            infoMessageDisplay("Le nom d'utilisateur est obligatoire pour se connecter.")
             self.resetLoginForm()
         elif self.password_widget.text() == "":
-            self.infoMessageDisplay("Le mot de passe est obligatoire pour se connecter.")
+            infoMessageDisplay("Le mot de passe est obligatoire pour se connecter.")
             self.resetLoginForm()
         else:
             result = checkCredentials(self.input_widget.text(), self.password_widget.text())
             if result[0] == True:
                 print(result[1][4] + " " + result[1][5] + " est connecté")
+                self.close()
+                self.window = MainWindow()
+                self.window.show()
             elif result[0] == False and result[1] == True:
-                self.infoMessageDisplay("Vos identifiants sont incorrects, veuillez réessayer.")
+                infoMessageDisplay("Vos identifiants sont incorrects, veuillez réessayer.")
                 self.resetLoginForm()
             elif result[0] == False and result[0] == False:
-                self.infoMessageDisplay("Un problème est survenu, veuillez réessayer plus tard")
+                infoMessageDisplay("Un problème est survenu, veuillez réessayer plus tard")
 
     def resetLoginForm(self):
         self.input_widget.setText("")
         self.password_widget.setText("")
 
-    def infoMessageDisplay(self, message):
-        msg = QMessageBox()
-        msg.setWindowTitle("SoigneMoi")
-        msg.setWindowIcon(QIcon(ICON_FILE))
-        msg.setIcon(QMessageBox.Icon.Information)
-        msg.setText("Info :")
-        msg.setInformativeText(message)
-        msg.exec()
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super(MainWindow, self).__init__()
 
-    def errorMessageDisplay(self, message):
-        msg = QMessageBox()
-        msg.setWindowTitle("SoigneMoi")
-        msg.setWindowIcon(QIcon(ICON_FILE))
-        msg.setIcon(QMessageBox.Icon.Critical)
-        msg.setText("Erreur :")
-        msg.setInformativeText(message)
-        sys.exit(msg.exec())
+        self.setWindowTitle("SoigneMoi Pro | v1.0")
+        self.setWindowIcon(QIcon(ICON_FILE))
+        self.setMinimumWidth(800)
+        self.setMinimumHeight(600)
 
 if __name__ == "__main__":
     App = QApplication(sys.argv)
