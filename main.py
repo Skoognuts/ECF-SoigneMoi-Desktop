@@ -8,6 +8,8 @@ from PyQt6.QtCore import *
 from PyQt6.QtGui import *
 from PyQt6.QtWidgets import *
 
+from _login import *
+
 CUR_DIR = os.path.dirname(__file__)
 DATA_DIR = os.path.join(CUR_DIR, "assets")
 IMAGE_DIR = os.path.join(DATA_DIR, "images")
@@ -30,14 +32,9 @@ class LoginWindow(QMainWindow):
                 user = "root",
                 password = ""
             )
+            mydb.close()
         except:
-            msg = QMessageBox()
-            msg.setWindowTitle("SoigneMoi")
-            msg.setWindowIcon(QIcon(ICON_FILE))
-            msg.setIcon(QMessageBox.Icon.Critical)
-            msg.setText("Erreur :")
-            msg.setInformativeText("La connexion à la base de données a échoué. Veuillez vérifier votre connexion et réessayer.")
-            sys.exit(msg.exec())
+            self.errorMessageDisplay("La connexion à la base de données a échoué. Veuillez vérifier votre connexion et réessayer.")
 
         ### LAYOUT ###
         central_widget = QWidget()
@@ -112,6 +109,19 @@ class LoginWindow(QMainWindow):
         elif self.password_widget.text() == "":
             self.infoMessageDisplay("Le mot de passe est obligatoire pour se connecter.")
             self.resetLoginForm()
+        else:
+            result = checkCredentials(self.input_widget.text(), self.password_widget.text())
+            if result[0] == True:
+                print(result[1][4] + " " + result[1][5] + " est connecté")
+            elif result[0] == False and result[1] == True:
+                self.infoMessageDisplay("Vos identifiants sont incorrects, veuillez réessayer.")
+                self.resetLoginForm()
+            elif result[0] == False and result[0] == False:
+                self.infoMessageDisplay("Un problème est survenu, veuillez réessayer plus tard")
+
+    def resetLoginForm(self):
+        self.input_widget.setText("")
+        self.password_widget.setText("")
 
     def infoMessageDisplay(self, message):
         msg = QMessageBox()
@@ -122,9 +132,14 @@ class LoginWindow(QMainWindow):
         msg.setInformativeText(message)
         msg.exec()
 
-    def resetLoginForm(self):
-        self.input_widget.setText("")
-        self.password_widget.setText("")
+    def errorMessageDisplay(self, message):
+        msg = QMessageBox()
+        msg.setWindowTitle("SoigneMoi")
+        msg.setWindowIcon(QIcon(ICON_FILE))
+        msg.setIcon(QMessageBox.Icon.Critical)
+        msg.setText("Erreur :")
+        msg.setInformativeText(message)
+        sys.exit(msg.exec())
 
 if __name__ == "__main__":
     App = QApplication(sys.argv)
