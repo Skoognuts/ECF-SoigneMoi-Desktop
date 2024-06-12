@@ -37,16 +37,11 @@ class LoginWindow(QMainWindow):
         except:
             errorMessageDisplay("La connexion à la base de données a échoué. Veuillez vérifier votre connexion et réessayer.")
 
-        ### LAYOUT ###
         central_widget = QWidget()
         central_widget.setObjectName("central_widget")
         grid_layout = QGridLayout()
         central_widget.setLayout(grid_layout)
         central_widget.setStyleSheet("QWidget#central_widget { background-color: qlineargradient(x1: 0.5, y1: 0.5 x2: 0.5, y2: 1, stop: 0 #FFFFFF, stop: 0.7 #AACCFF ) }")
-
-        ### LAYOUT DEBUG ONLY ###
-        # central_widget.setStyleSheet("border: 1px solid red")
-        ### LAYOUT DEBUG ONLY ###
 
         title = QWidget()
         title_layout = QGridLayout()
@@ -103,7 +98,6 @@ class LoginWindow(QMainWindow):
         self.show()
 
     def login(self):
-        ### HANDLING USER EMPTY INPUTS ###
         if self.input_widget.text() == "":
             infoMessageDisplay("Le nom d'utilisateur est obligatoire pour se connecter.")
             self.resetLoginForm()
@@ -113,9 +107,8 @@ class LoginWindow(QMainWindow):
         else:
             result = checkCredentials(self.input_widget.text(), self.password_widget.text())
             if result[0] == True:
-                print(result[1][4] + " " + result[1][5] + " est connecté")
                 self.close()
-                self.window = MainWindow()
+                self.window = MainWindow(result[1])
                 self.window.show()
             elif result[0] == False and result[1] == True:
                 infoMessageDisplay("Vos identifiants sont incorrects, veuillez réessayer.")
@@ -127,14 +120,67 @@ class LoginWindow(QMainWindow):
         self.input_widget.setText("")
         self.password_widget.setText("")
 
-class MainWindow(QMainWindow):
-    def __init__(self):
+class MainWindow(QTabWidget):
+    def __init__(self, user):
         super(MainWindow, self).__init__()
 
         self.setWindowTitle("SoigneMoi Pro | v1.0")
         self.setWindowIcon(QIcon(ICON_FILE))
-        self.setMinimumWidth(800)
-        self.setMinimumHeight(600)
+        self.setMinimumWidth(1200)
+        self.setMinimumHeight(900)
+
+        self.tab_dashboard = QWidget()
+        self.tab_entries = QWidget()
+        self.tab_patients = QWidget()
+        self.tab_admin = QWidget()
+
+        self.addTab(self.tab_dashboard," TABLEAU DE BORD ")
+        self.addTab(self.tab_entries," ADMISSIONS ")
+        self.addTab(self.tab_patients," PATIENTS ")
+        if user[3] == "ROLE_ADMIN":
+            self.addTab(self.tab_admin," ADMINISTRATION ")
+
+        self.tabDashboardUI()
+        self.tabEntriesUI()
+        self.tabPatientsUI()
+        self.tabAdminUI()
+
+    def tabDashboardUI(self):
+        self.grid_layout = QGridLayout(self)
+
+        self.nav_tab = QWidget()
+        self.nav_tab.setStyleSheet(
+            "QWidget { background-color: #000000 }"
+        )
+
+        self.header = QWidget()
+        self.header.setStyleSheet(
+            "QWidget { background-color: #FF0000 }"
+        )
+
+        self.grid_layout.addWidget(self.nav_tab, 0, 0, 5, 1)
+        self.grid_layout.addWidget(self.header, 0, 1, 2, 8)
+
+        self.setTabText(0," TABLEAU DE BORD ")
+        self.tab_dashboard.setLayout(self.grid_layout)
+
+    def tabEntriesUI(self):
+        self.grid_layout = QGridLayout(self)
+
+        self.setTabText(1," ADMISSIONS ")
+        self.tab_entries.setLayout(self.grid_layout)
+
+    def tabPatientsUI(self):
+        self.grid_layout = QGridLayout(self)
+
+        self.setTabText(2," PATIENTS ")
+        self.tab_patients.setLayout(self.grid_layout)
+
+    def tabAdminUI(self):
+        self.grid_layout = QGridLayout(self)
+
+        self.setTabText(3," ADMINISTRATION ")
+        self.tab_admin.setLayout(self.grid_layout)
 
 if __name__ == "__main__":
     App = QApplication(sys.argv)
