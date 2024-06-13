@@ -4,6 +4,8 @@ import os
 import sys
 import mysql.connector
 
+from datetime import date
+
 from PyQt6.QtCore import *
 from PyQt6.QtGui import *
 from PyQt6.QtWidgets import *
@@ -240,10 +242,36 @@ class MainWindow(QMainWindow):
 
         ########################################## HEADER ##########################################
         header = QWidget()
+        header.setObjectName("header")
         header.setStyleSheet(
-            "QWidget { background-color: qlineargradient(x1: 0.5, y1: 0.5 x2: 0.5, y2: 1, stop: 0 #AACCFF, stop: 0.7 #CCEEFF ) }"
+            "QWidget#header { background-color: qlineargradient(x1: 0.5, y1: 0.5 x2: 0.5, y2: 1, stop: 0 #AACCFF, stop: 0.7 #CCEEFF ) }"
         )
         header.setFixedHeight(200)
+        header_layout = QVBoxLayout()
+        header.setLayout(header_layout)
+
+        shadow1 = QGraphicsDropShadowEffect()
+        shadow1.setOffset(0, 0)
+        shadow1.setBlurRadius(10)
+        shadow1.setColor(QColor("#000000"))
+
+        header_title = QLabel("TABLEAU DE BORD")
+        header_title.setStyleSheet("color: white; font-size: 50px; font-weight: bold")
+        header_title.setGraphicsEffect(shadow1)
+
+        shadow2 = QGraphicsDropShadowEffect()
+        shadow2.setOffset(0, 0)
+        shadow2.setBlurRadius(5)
+        shadow2.setColor(QColor("#000000"))
+
+        today_date = date.today().strftime("%d/%m/%Y")
+        header_date = QLabel("> " + today_date)
+        header_date.setStyleSheet("color: white; font-size: 30px")
+        header_date.setGraphicsEffect(shadow2)
+
+        header_layout.addWidget(header_title)
+        header_layout.addWidget(header_date)
+        header_layout.addStretch(1)
 
         ########################################## MAIN ##########################################
         main = QWidget()
@@ -350,10 +378,36 @@ class MainWindow(QMainWindow):
 
         ########################################## HEADER ##########################################
         header = QWidget()
+        header.setObjectName("header")
         header.setStyleSheet(
-            "QWidget { background-color: qlineargradient(x1: 0.5, y1: 0.5 x2: 0.5, y2: 1, stop: 0 #AACCFF, stop: 0.7 #CCEEFF ) }"
+            "QWidget#header { background-color: qlineargradient(x1: 0.5, y1: 0.5 x2: 0.5, y2: 1, stop: 0 #AACCFF, stop: 0.7 #CCEEFF ) }"
         )
         header.setFixedHeight(200)
+        header_layout = QVBoxLayout()
+        header.setLayout(header_layout)
+
+        shadow1 = QGraphicsDropShadowEffect()
+        shadow1.setOffset(0, 0)
+        shadow1.setBlurRadius(10)
+        shadow1.setColor(QColor("#000000"))
+
+        header_title = QLabel("ADMISSIONS")
+        header_title.setStyleSheet("color: white; font-size: 50px; font-weight: bold")
+        header_title.setGraphicsEffect(shadow1)
+
+        shadow2 = QGraphicsDropShadowEffect()
+        shadow2.setOffset(0, 0)
+        shadow2.setBlurRadius(5)
+        shadow2.setColor(QColor("#000000"))
+
+        today_date = date.today().strftime("%d/%m/%Y")
+        header_date = QLabel("> " + today_date)
+        header_date.setStyleSheet("color: white; font-size: 30px")
+        header_date.setGraphicsEffect(shadow2)
+
+        header_layout.addWidget(header_title)
+        header_layout.addWidget(header_date)
+        header_layout.addStretch(1)
 
         ########################################## MAIN ##########################################
         main = QWidget()
@@ -460,10 +514,36 @@ class MainWindow(QMainWindow):
 
         ########################################## HEADER ##########################################
         header = QWidget()
+        header.setObjectName("header")
         header.setStyleSheet(
-            "QWidget { background-color: qlineargradient(x1: 0.5, y1: 0.5 x2: 0.5, y2: 1, stop: 0 #AACCFF, stop: 0.7 #CCEEFF ) }"
+            "QWidget#header { background-color: qlineargradient(x1: 0.5, y1: 0.5 x2: 0.5, y2: 1, stop: 0 #AACCFF, stop: 0.7 #CCEEFF ) }"
         )
         header.setFixedHeight(200)
+        header_layout = QVBoxLayout()
+        header.setLayout(header_layout)
+
+        shadow1 = QGraphicsDropShadowEffect()
+        shadow1.setOffset(0, 0)
+        shadow1.setBlurRadius(10)
+        shadow1.setColor(QColor("#000000"))
+
+        header_title = QLabel("PATIENTS")
+        header_title.setStyleSheet("color: white; font-size: 50px; font-weight: bold")
+        header_title.setGraphicsEffect(shadow1)
+
+        shadow2 = QGraphicsDropShadowEffect()
+        shadow2.setOffset(0, 0)
+        shadow2.setBlurRadius(5)
+        shadow2.setColor(QColor("#000000"))
+
+        today_date = date.today().strftime("%d/%m/%Y")
+        header_date = QLabel("> " + today_date)
+        header_date.setStyleSheet("color: white; font-size: 30px")
+        header_date.setGraphicsEffect(shadow2)
+
+        header_layout.addWidget(header_title)
+        header_layout.addWidget(header_date)
+        header_layout.addStretch(1)
 
         ########################################## MAIN ##########################################
         main = QWidget()
