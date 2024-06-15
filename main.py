@@ -229,7 +229,7 @@ class MainWindow(QMainWindow):
         pixmap = QPixmap(os.path.join(IMAGE_DIR, "user.png"))
         user_logo.setPixmap(pixmap)
 
-        user_name = QLabel(self.user[3] + " " + self.user[4])
+        user_name = QLabel(self.user[5] + " " + self.user[6])
         user_name.setStyleSheet("color: white; font-size: 20px")
 
         nav_user_layout.addWidget(user_logo, Qt.AlignmentFlag.AlignLeft)
@@ -278,6 +278,8 @@ class MainWindow(QMainWindow):
         main.setStyleSheet(
             "QWidget { background-color: #FFFFFF }"
         )
+
+        main_table = QTableWidget()
 
         grid_layout.addWidget(nav_tab, 0, 0, 2, 1)
         grid_layout.addWidget(header, 0, 1, 1, 1)
@@ -365,7 +367,7 @@ class MainWindow(QMainWindow):
         pixmap = QPixmap(os.path.join(IMAGE_DIR, "user.png"))
         user_logo.setPixmap(pixmap)
 
-        user_name = QLabel(self.user[3] + " " + self.user[4])
+        user_name = QLabel(self.user[5] + " " + self.user[6])
         user_name.setStyleSheet("color: white; font-size: 20px")
 
         nav_user_layout.addWidget(user_logo, Qt.AlignmentFlag.AlignLeft)
@@ -501,7 +503,7 @@ class MainWindow(QMainWindow):
         pixmap = QPixmap(os.path.join(IMAGE_DIR, "user.png"))
         user_logo.setPixmap(pixmap)
 
-        user_name = QLabel(self.user[3] + " " + self.user[4])
+        user_name = QLabel(self.user[5] + " " + self.user[6])
         user_name.setStyleSheet("color: white; font-size: 20px")
 
         nav_user_layout.addWidget(user_logo, Qt.AlignmentFlag.AlignLeft)

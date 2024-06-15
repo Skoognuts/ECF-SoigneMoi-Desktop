@@ -16,11 +16,14 @@ def checkCredentials(username, password):
         users = mycursor.fetchall()
         mydb.close()
         for user in users:
-            if username == user[1]:
-                hashed = user[2].encode()
-                bytes = password.encode()
-                if bcrypt.checkpw(bytes, hashed):
-                    return(True, user)
+            if username == user[2]:
+                if "ROLE_SECRETARY" in user[4]:
+                    hashed = user[3].encode()
+                    bytes = password.encode()
+                    if bcrypt.checkpw(bytes, hashed):
+                        return(True, user)
+                    else:
+                        return(False, True)
                 else:
                     return(False, True)
         else:
