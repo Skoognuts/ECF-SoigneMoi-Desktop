@@ -151,117 +151,8 @@ class MainWindow(QMainWindow):
         grid_layout = QGridLayout()
         grid_layout.setSpacing(0)
 
-        ########################################## NAVIGATION LATERALE ##########################################
-        nav_tab = QWidget()
-        nav_tab.setObjectName("nav_tab")
-        nav_tab.setStyleSheet(
-            "QWidget#nav_tab { background-color: #000000 }"
-        )
-        nav_tab.setFixedWidth(300)
-        nav_grid_layout = QGridLayout()
-        nav_tab.setLayout(nav_grid_layout)
-
-        nav_brand = QWidget()
-        nav_brand_layout = QGridLayout()
-        nav_brand.setLayout(nav_brand_layout)
-
-        logo = QLabel()
-        pixmap = QPixmap(os.path.join(IMAGE_DIR, "logo.png"))
-        logo.setPixmap(pixmap)
-        main_title = QLabel("Soigne Moi")
-        main_title.setStyleSheet("color: white; font-size: 40px; font-weight: bold")
-        sub_title = QLabel("Version Pro 1.0")
-        sub_title.setStyleSheet("color: #319997; font-size: 15px; font-weight: bold")
-
-        nav_brand_layout.addWidget(logo, 0, 0, 1, 1,  Qt.AlignmentFlag.AlignCenter)
-        nav_brand_layout.addWidget(main_title, 1, 0, 1, 1,  Qt.AlignmentFlag.AlignCenter)
-        nav_brand_layout.addWidget(sub_title, 2, 0, 1, 1,  Qt.AlignmentFlag.AlignCenter)
-
-        nav_buttons = QWidget()
-        nav_buttons_layout = QVBoxLayout()
-        nav_buttons_layout.setSpacing(0)
-        nav_buttons_layout.setContentsMargins(0, 0, 0, 0)
-        nav_buttons_layout.addStretch(1)
-        nav_buttons.setLayout(nav_buttons_layout)
-
-        button1 = QPushButton("Tableau de bord", self)
-        button1.clicked.connect(self.gotoTabDashboard)
-        button1.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        button1.setStyleSheet(
-            "QPushButton { background-color: #000000; color: #7289DA; font-size: 30px; font-weight: bold; text-align: left }"
-            "QPushButton:hover { color: #319997 }"
-        )
-        button2 = QPushButton("Patients", self)
-        button2.clicked.connect(self.gotoTabPatients)
-        button2.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        button2.setStyleSheet(
-            "QPushButton { background-color: #000000; color: white; font-size: 30px; font-weight: bold; text-align: left }"
-            "QPushButton:hover { color: #319997 }"
-        )
-        button3 = QPushButton("Déconnexion", self)
-        button3.clicked.connect(self.disconnect)
-        button3.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        button3.setStyleSheet(
-            "QPushButton { background-color: #000000; color: white; font-size: 30px; font-weight: bold; text-align: left }"
-            "QPushButton:hover { color: #FFA500 }"
-        )
-
-        nav_buttons_layout.addWidget(button1)
-        nav_buttons_layout.addWidget(button2)
-        nav_buttons_layout.addWidget(button3)
-
-        nav_user = QWidget()
-        nav_user_layout = QHBoxLayout()
-        nav_user_layout.setSpacing(0)
-        nav_user.setLayout(nav_user_layout)
-
-        user_logo = QLabel()
-        pixmap = QPixmap(os.path.join(IMAGE_DIR, "user.png"))
-        user_logo.setPixmap(pixmap)
-
-        user_name = QLabel("  " + self.user[5] + " " + self.user[6])
-        user_name.setStyleSheet("color: white; font-size: 20px")
-
-        nav_user_layout.addWidget(user_logo, Qt.AlignmentFlag.AlignLeft)
-        nav_user_layout.addWidget(user_name, Qt.AlignmentFlag.AlignLeft)
-        nav_user_layout.addStretch(1)
-
-        nav_grid_layout.addWidget(nav_brand, 0, 0, 1, 1)
-        nav_grid_layout.addWidget(nav_buttons, 1, 0, 1, 1,  Qt.AlignmentFlag.AlignCenter)
-        nav_grid_layout.addWidget(nav_user, 2, 0, 1, 1,  Qt.AlignmentFlag.AlignBottom)
-
-        ########################################## HEADER ##########################################
-        header = QWidget()
-        header.setObjectName("header")
-        header.setStyleSheet(
-            "QWidget#header { background-color: qlineargradient(x1: 0.5, y1: 0.5 x2: 0.5, y2: 1, stop: 0 #AACCFF, stop: 0.7 #CCEEFF ) }"
-        )
-        header.setFixedHeight(200)
-        header_layout = QVBoxLayout()
-        header.setLayout(header_layout)
-
-        shadow1 = QGraphicsDropShadowEffect()
-        shadow1.setOffset(0, 0)
-        shadow1.setBlurRadius(10)
-        shadow1.setColor(QColor("#000000"))
-
-        header_title = QLabel("TABLEAU DE BORD")
-        header_title.setStyleSheet("color: white; font-size: 50px; font-weight: bold")
-        header_title.setGraphicsEffect(shadow1)
-
-        shadow2 = QGraphicsDropShadowEffect()
-        shadow2.setOffset(0, 0)
-        shadow2.setBlurRadius(5)
-        shadow2.setColor(QColor("#000000"))
-
-        today_date = date.today().strftime("%d/%m/%Y")
-        header_date = QLabel("> " + today_date)
-        header_date.setStyleSheet("color: white; font-size: 30px")
-        header_date.setGraphicsEffect(shadow2)
-
-        header_layout.addWidget(header_title)
-        header_layout.addWidget(header_date)
-        header_layout.addStretch(1)
+        nav_tab = self.displayLatNav(1)
+        header = self.displayHeader("TABLEAU DE BORD")
 
         ########################################## MAIN ##########################################
         main = QWidget()
@@ -307,7 +198,57 @@ class MainWindow(QMainWindow):
         grid_layout = QGridLayout()
         grid_layout.setSpacing(0)
 
-        ########################################## NAVIGATION LATERALE ##########################################
+        nav_tab = self.displayLatNav(2)
+        header = self.displayHeader("PATIENTS")
+
+        ########################################## MAIN ##########################################
+        main = QWidget()
+        main.setStyleSheet(
+            "QWidget { background-color: #FFFFFF }"
+        )
+
+        grid_layout.addWidget(nav_tab, 0, 0, 2, 1)
+        grid_layout.addWidget(header, 0, 1, 1, 1)
+        grid_layout.addWidget(main, 1, 1, 1, 1)
+
+        self.tab_patients.setLayout(grid_layout)
+
+    def displayHeader(self, title):
+        header = QWidget()
+        header.setObjectName("header")
+        header.setStyleSheet(
+            "QWidget#header { background-color: qlineargradient(x1: 0.5, y1: 0.5 x2: 0.5, y2: 1, stop: 0 #AACCFF, stop: 0.7 #CCEEFF ) }"
+        )
+        header.setFixedHeight(200)
+        header_layout = QVBoxLayout()
+        header.setLayout(header_layout)
+
+        shadow1 = QGraphicsDropShadowEffect()
+        shadow1.setOffset(0, 0)
+        shadow1.setBlurRadius(10)
+        shadow1.setColor(QColor("#000000"))
+
+        header_title = QLabel(title)
+        header_title.setStyleSheet("color: white; font-size: 50px; font-weight: bold")
+        header_title.setGraphicsEffect(shadow1)
+
+        shadow2 = QGraphicsDropShadowEffect()
+        shadow2.setOffset(0, 0)
+        shadow2.setBlurRadius(5)
+        shadow2.setColor(QColor("#000000"))
+
+        today_date = date.today().strftime("%d/%m/%Y")
+        header_date = QLabel("> " + today_date)
+        header_date.setStyleSheet("color: white; font-size: 30px")
+        header_date.setGraphicsEffect(shadow2)
+
+        header_layout.addWidget(header_title)
+        header_layout.addWidget(header_date)
+        header_layout.addStretch(1)
+
+        return header
+
+    def displayLatNav(self, activTab):
         nav_tab = QWidget()
         nav_tab.setObjectName("nav_tab")
         nav_tab.setStyleSheet(
@@ -343,17 +284,29 @@ class MainWindow(QMainWindow):
         button1 = QPushButton("Tableau de bord", self)
         button1.clicked.connect(self.gotoTabDashboard)
         button1.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        button1.setStyleSheet(
-            "QPushButton { background-color: #000000; color: white; font-size: 30px; font-weight: bold; text-align: left }"
-            "QPushButton:hover { color: #319997 }"
-        )
+        if activTab == 1:
+            button1.setStyleSheet(
+                "QPushButton { background-color: #000000; color: #7289DA; font-size: 30px; font-weight: bold; text-align: left }"
+                "QPushButton:hover { color: #319997 }"
+            )
+        else:
+            button1.setStyleSheet(
+                "QPushButton { background-color: #000000; color: white; font-size: 30px; font-weight: bold; text-align: left }"
+                "QPushButton:hover { color: #319997 }"
+            )
         button2 = QPushButton("Patients", self)
         button2.clicked.connect(self.gotoTabPatients)
         button2.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        button2.setStyleSheet(
-            "QPushButton { background-color: #000000; color: #7289DA; font-size: 30px; font-weight: bold; text-align: left }"
-            "QPushButton:hover { color: #319997 }"
-        )
+        if activTab == 2:
+            button2.setStyleSheet(
+                "QPushButton { background-color: #000000; color: #7289DA; font-size: 30px; font-weight: bold; text-align: left }"
+                "QPushButton:hover { color: #319997 }"
+            )
+        else:
+            button2.setStyleSheet(
+                "QPushButton { background-color: #000000; color: white; font-size: 30px; font-weight: bold; text-align: left }"
+                "QPushButton:hover { color: #319997 }"
+            )
         button3 = QPushButton("Déconnexion", self)
         button3.clicked.connect(self.disconnect)
         button3.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
@@ -386,50 +339,7 @@ class MainWindow(QMainWindow):
         nav_grid_layout.addWidget(nav_buttons, 1, 0, 1, 1,  Qt.AlignmentFlag.AlignCenter)
         nav_grid_layout.addWidget(nav_user, 2, 0, 1, 1,  Qt.AlignmentFlag.AlignBottom)
 
-        ########################################## HEADER ##########################################
-        header = QWidget()
-        header.setObjectName("header")
-        header.setStyleSheet(
-            "QWidget#header { background-color: qlineargradient(x1: 0.5, y1: 0.5 x2: 0.5, y2: 1, stop: 0 #AACCFF, stop: 0.7 #CCEEFF ) }"
-        )
-        header.setFixedHeight(200)
-        header_layout = QVBoxLayout()
-        header.setLayout(header_layout)
-
-        shadow1 = QGraphicsDropShadowEffect()
-        shadow1.setOffset(0, 0)
-        shadow1.setBlurRadius(10)
-        shadow1.setColor(QColor("#000000"))
-
-        header_title = QLabel("PATIENTS")
-        header_title.setStyleSheet("color: white; font-size: 50px; font-weight: bold")
-        header_title.setGraphicsEffect(shadow1)
-
-        shadow2 = QGraphicsDropShadowEffect()
-        shadow2.setOffset(0, 0)
-        shadow2.setBlurRadius(5)
-        shadow2.setColor(QColor("#000000"))
-
-        today_date = date.today().strftime("%d/%m/%Y")
-        header_date = QLabel("> " + today_date)
-        header_date.setStyleSheet("color: white; font-size: 30px")
-        header_date.setGraphicsEffect(shadow2)
-
-        header_layout.addWidget(header_title)
-        header_layout.addWidget(header_date)
-        header_layout.addStretch(1)
-
-        ########################################## MAIN ##########################################
-        main = QWidget()
-        main.setStyleSheet(
-            "QWidget { background-color: #FFFFFF }"
-        )
-
-        grid_layout.addWidget(nav_tab, 0, 0, 2, 1)
-        grid_layout.addWidget(header, 0, 1, 1, 1)
-        grid_layout.addWidget(main, 1, 1, 1, 1)
-
-        self.tab_patients.setLayout(grid_layout)
+        return nav_tab
 
     def gotoTabDashboard(self):
         self.tab_widget.setCurrentIndex(0)
