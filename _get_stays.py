@@ -16,7 +16,7 @@ def getStays():
         mydb.close()
         return(stays)
     except:
-        return(False)
+        pass
 
 def getStayUser(id):
     try:
@@ -33,7 +33,24 @@ def getStayUser(id):
         mydb.close()
         return(user)
     except:
-        return(False)
+        pass
+
+def getUserStays(id):
+    try:
+        mydb = mysql.connector.connect(
+            host = "localhost",
+            database = "soigne_moi",
+            user = "root",
+            password = ""
+        )
+        mycursor = mydb.cursor()
+        sql = """SELECT * FROM stay WHERE user_id = ("%s") ORDER BY date_from""" %(id)
+        mycursor.execute(sql)
+        stays = mycursor.fetchall()
+        mydb.close()
+        return(stays)
+    except:
+        pass
 
 def getStaySpecialty(id):
     try:
@@ -50,4 +67,4 @@ def getStaySpecialty(id):
         mydb.close()
         return(specialty)
     except:
-        return(False)
+        pass

@@ -17,4 +17,21 @@ def getPatients():
         mydb.close()
         return(patients)
     except:
-        print("Oups")
+        pass
+
+def getPatientById(id):
+    try:
+        mydb = mysql.connector.connect(
+            host = "localhost",
+            database = "soigne_moi",
+            user = "root",
+            password = ""
+        )
+        mycursor = mydb.cursor()
+        sql = """SELECT * FROM user WHERE id = ("%s")""" %(id) 
+        mycursor.execute(sql)
+        patient = mycursor.fetchone()
+        mydb.close()
+        return(patient)
+    except:
+        pass

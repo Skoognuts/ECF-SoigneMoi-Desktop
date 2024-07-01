@@ -1,6 +1,7 @@
 #-*- coding: utf-8 -*-
 
 import os
+import re
 import sys
 import mysql.connector
 
@@ -175,14 +176,17 @@ class MainWindow(QMainWindow):
                 user = getStayUser(stay[1])
                 doctor = getStayUser(stay[2])
                 specialty = getStaySpecialty(doctor[1])
-                item = QListWidgetItem("🟢 " + user[6] + " " + user[5] + " (" + stay[5] + " - Dr. " + doctor[6] + " - " + specialty[1] + ")")
+                item = QListWidgetItem("[" + str(user[0]) + "] 🟢 " + user[6] + " " + user[5] + " (" + stay[5] + " - Dr. " + doctor[6] + " - " + specialty[1] + ")")
                 main_list_in.addItem(item)
             if stay[4] == date.today():
                 user = getStayUser(stay[1])
                 doctor = getStayUser(stay[2])
                 specialty = getStaySpecialty(doctor[1])
-                item = QListWidgetItem("🔴 " + user[6] + " " + user[5] + " (" + stay[5] + " - Dr. " + doctor[6] + " - " + specialty[1] + ")")
+                item = QListWidgetItem("[" + str(user[0]) + "] 🔴 " + user[6] + " " + user[5] + " (" + stay[5] + " - Dr. " + doctor[6] + " - " + specialty[1] + ")")
                 main_list_out.addItem(item)
+
+        main_list_in.itemClicked.connect(self.ClickedItem)
+        main_list_out.itemClicked.connect(self.ClickedItem)
 
         main_layout.addWidget(main_list_in_label, 0, 0, 1, 1)
         main_layout.addWidget(main_list_out_label, 0, 1, 1, 1)
@@ -216,8 +220,10 @@ class MainWindow(QMainWindow):
         patients = getPatients()
 
         for patient in patients:
-            item = QListWidgetItem("🟢 " + patient[6] + " " + patient[5])
+            item = QListWidgetItem("[" + str(patient[0]) + "]🟢 " + patient[6] + " " + patient[5])
             main_patient_list.addItem(item)
+
+        main_patient_list.itemClicked.connect(self.ClickedItem)
 
         main_layout.addWidget(main_patient_list_label, 0, 0, 1, 1)
         main_layout.addWidget(main_patient_list, 1, 0, 1, 1)
@@ -362,8 +368,104 @@ class MainWindow(QMainWindow):
     def gotoTabPatients(self):
         self.tab_widget.setCurrentIndex(1)
 
+    def ClickedItem(self, item):
+        itemText = item.text()
+        patientId = re.search(r"\[([A-Za-z0-9_]+)\]", itemText)
+        patientId = patientId.group(1)
+        self.patientWindow = PatientWindow(patientId)
+        self.patientWindow.show()
+
     def disconnect(self):
         sys.exit()
+
+class PatientWindow(QMainWindow):
+    def __init__(self, patientId = None):
+        super(PatientWindow, self).__init__()
+
+        self.patientId = patientId
+
+        self.setWindowTitle("SoigneMoi Pro | v1.0")
+        self.setWindowIcon(QIcon(ICON_FILE))
+        self.setMinimumWidth(800)
+        self.setMinimumHeight(600)
+
+        central_widget = QWidget()
+        central_widget.setObjectName("central_widget")
+        grid_layout = QGridLayout()
+        central_widget.setLayout(grid_layout)
+
+        patient = getPatientById(self.patientId)
+        header = self.displayHeader("🟢 " + patient[6] + " " + patient[5])
+
+        patient_infos_label = QLabel("Informations personnelles")
+        patient_stays_label = QLabel("Séjours")
+        patient_infos = QListWidget()
+        patient_stays = QListWidget()
+
+        info_lastname = QListWidgetItem("Nom : " + patient[6])
+        info_firstname = QListWidgetItem("Prénom : " + patient[5])
+        info_spacer = QListWidgetItem(" ")
+        info_email = QListWidgetItem("E-mail : " + patient[2])
+        info_address = QListWidgetItem("Adresse : " + patient[7])
+        
+        patient_infos.addItem(info_lastname)
+        patient_infos.addItem(info_firstname)
+        patient_infos.addItem(info_spacer)
+        patient_infos.addItem(info_email)
+        patient_infos.addItem(info_address)
+
+        stays = getUserStays(patient[0])
+
+        for stay in stays:
+            doctor = getStayUser(stay[2])
+            specialty = getStaySpecialty(doctor[1])
+            stay_reason = QListWidgetItem("🟢 Motif : " + stay[5])
+            stay_doctor = QListWidgetItem("Docteur : Dr. " + doctor[6] + " (" + specialty[1] + ")")
+            stay_date = QListWidgetItem("Du " + stay[3].strftime("%d/%m/%Y") + " au " + stay[4].strftime("%d/%m/%Y"))
+            stay_spacer = QListWidgetItem(" ")
+
+            patient_stays.addItem(stay_reason)
+            patient_stays.addItem(stay_doctor)
+            patient_stays.addItem(stay_date)
+            patient_stays.addItem(stay_spacer)
+
+        grid_layout.addWidget(header, 0, 0, 1, 2, Qt.AlignmentFlag.AlignTop)
+        grid_layout.addWidget(patient_infos_label, 1, 0, 1, 1)
+        grid_layout.addWidget(patient_stays_label, 1, 1, 1, 1)
+        grid_layout.addWidget(patient_infos, 2, 0, 1, 1)
+        grid_layout.addWidget(patient_stays, 2, 1, 1, 1)
+
+        self.setCentralWidget(central_widget)
+        self.show()
+
+    def displayHeader(self, title):
+        header = QWidget()
+        header.setObjectName("header")
+        header.setStyleSheet(
+            "QWidget#header { background-color: qlineargradient(x1: 0.5, y1: 0.5 x2: 0.5, y2: 1, stop: 0 #AACCFF, stop: 0.7 #CCEEFF ) }"
+        )
+        header.setFixedHeight(80)
+        header_layout = QVBoxLayout()
+        header.setLayout(header_layout)
+
+        shadow1 = QGraphicsDropShadowEffect()
+        shadow1.setOffset(0, 0)
+        shadow1.setBlurRadius(10)
+        shadow1.setColor(QColor("#000000"))
+
+        header_title = QLabel(title)
+        header_title.setStyleSheet("color: white; font-size: 35px; font-weight: bold")
+        header_title.setGraphicsEffect(shadow1)
+
+        shadow2 = QGraphicsDropShadowEffect()
+        shadow2.setOffset(0, 0)
+        shadow2.setBlurRadius(5)
+        shadow2.setColor(QColor("#000000"))
+
+        header_layout.addWidget(header_title)
+        header_layout.addStretch(1)
+
+        return header
 
 if __name__ == "__main__":
     App = QApplication(sys.argv)
