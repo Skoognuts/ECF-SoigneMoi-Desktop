@@ -13,6 +13,7 @@ from PyQt6.QtWidgets import *
 from _login import *
 from _message import *
 from _get_stays import *
+from _get_patients import *
 
 CUR_DIR = os.path.dirname(__file__)
 DATA_DIR = os.path.join(CUR_DIR, "assets")
@@ -174,13 +175,13 @@ class MainWindow(QMainWindow):
                 user = getStayUser(stay[1])
                 doctor = getStayUser(stay[2])
                 specialty = getStaySpecialty(doctor[1])
-                item = QListWidgetItem("🟢 " + user[6] + " " + user[5] + " - " + stay[5] + " - Dr. " + doctor[6] + " (" + specialty[1] + ")")
+                item = QListWidgetItem("🟢 " + user[6] + " " + user[5] + " (" + stay[5] + " - Dr. " + doctor[6] + " - " + specialty[1] + ")")
                 main_list_in.addItem(item)
             if stay[4] == date.today():
                 user = getStayUser(stay[1])
                 doctor = getStayUser(stay[2])
                 specialty = getStaySpecialty(doctor[1])
-                item = QListWidgetItem("🔴 " + user[6] + " " + user[5] + " - " + stay[5] + " - Dr. " + doctor[6] + " (" + specialty[1] + ")")
+                item = QListWidgetItem("🔴 " + user[6] + " " + user[5] + " (" + stay[5] + " - Dr. " + doctor[6] + " - " + specialty[1] + ")")
                 main_list_out.addItem(item)
 
         main_layout.addWidget(main_list_in_label, 0, 0, 1, 1)
@@ -206,6 +207,20 @@ class MainWindow(QMainWindow):
         main.setStyleSheet(
             "QWidget { background-color: #FFFFFF }"
         )
+        main_layout = QGridLayout()
+        main.setLayout(main_layout)
+
+        main_patient_list_label = QLabel("Liste des patients")
+        main_patient_list = QListWidget()
+
+        patients = getPatients()
+
+        for patient in patients:
+            item = QListWidgetItem("🟢 " + patient[6] + " " + patient[5])
+            main_patient_list.addItem(item)
+
+        main_layout.addWidget(main_patient_list_label, 0, 0, 1, 1)
+        main_layout.addWidget(main_patient_list, 1, 0, 1, 1)
 
         grid_layout.addWidget(nav_tab, 0, 0, 2, 1)
         grid_layout.addWidget(header, 0, 1, 1, 1)
